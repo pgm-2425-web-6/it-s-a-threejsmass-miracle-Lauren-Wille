@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Christmas</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+      }
+      .example-container {
+        overflow: hidden;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="example-container">
+      <a-scene
+        mindar-face
+        embedded
+        color-space="sRGB"
+        renderer="colorManagement: true, physicallyCorrectLights"
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false"
+      >
+        <a-assets>
+          <!-- Define the assets -->
+          <a-asset-item
+            id="hatModel"
+            src="./free_xmas_hat_-_free_christmas_hat.glb"
+          ></a-asset-item>
+          <a-asset-item
+            id="headModel"
+            src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/headOccluder/headOccluder.glb"
+          ></a-asset-item>
+        </a-assets>
+
+        <!-- Camera for AR -->
+        <a-camera position="-1 -1 -1"></a-camera>
+
+        <!-- Head occluder -->
+        <a-entity mindar-face-target="anchorIndex: 168">
+          <a-gltf-model
+            mindar-face-occluder
+            position="0 -0.3 0.15"
+            rotation="0 0 0"
+            scale="0 0 0"
+            src="#headModel"
+          ></a-gltf-model>
+        </a-entity>
+
+        <!-- Hat model -->
+        <a-entity mindar-face-target="anchorIndex: 0">
+          <a-gltf-model
+            rotation="10 90 0"
+            position="0 0.5 0"
+            scale="0.005 0.005 0.005"
+            src="#hatModel"
+            class="hat1-entity"
+            visible="true"
+          ></a-gltf-model>
+        </a-entity>
+      </a-scene>
+    </div>
+  </body>
+</html>
