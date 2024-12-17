@@ -1,12 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Christmas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-face-aframe.prod.js"></script>
-
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const list = [ "hat1", "hat2"];
+        const visibles = [true, false];
+        const setVisible = (button, entities, visible) => {
+          if (visible) {
+            button.classList.add("selected");
+          } else {
+            button.classList.remove("selected");
+          }
+          entities.forEach((entity) => {
+            entity.setAttribute("visible", visible);
+          });
+        };
+        list.forEach((item, index) => {
+          const button = document.querySelector("#" + item);
+          const entities = document.querySelectorAll("." + item + "-entity");
+          setVisible(button, entities, visibles[index]);
+          button.addEventListener("click", () => {
+            visibles[index] = !visibles[index];
+            setVisible(button, entities, visibles[index]);
+          });
+        });
+      });
+    </script>
     <style>
       body {
         margin: 0;
@@ -17,10 +38,30 @@
         width: 100%;
         height: 100%;
       }
+      .options-panel {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 2;
+      }
+      .options-panel img {
+        border: solid 2px;
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        cursor: pointer;
+      }
+      .options-panel img.selected {
+        border-color: green;
+      }
     </style>
   </head>
   <body>
     <div class="example-container">
+      <div class="options-panel">
+        <img id="hat1" src="./hat1.png" />
+        <img id="hat2" src="./hat2.png" />
+      </div>
       <a-scene
         mindar-face
         embedded
@@ -30,40 +71,49 @@
         device-orientation-permission-ui="enabled: false"
       >
         <a-assets>
-          <!-- Define the assets -->
+          <a-asset-item
+            id="headModel"
+            src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/sparkar/headOccluder.glb"
+          ></a-asset-item>
           <a-asset-item
             id="hatModel"
             src="./free_xmas_hat_-_free_christmas_hat.glb"
           ></a-asset-item>
           <a-asset-item
-            id="headModel"
-            src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/face-tracking/assets/headOccluder/headOccluder.glb"
+            id="hatModel2"
+            src="./low_poly_santa_hat.glb"
           ></a-asset-item>
         </a-assets>
+        <a-camera active="false" position="0 0 0"></a-camera>
 
-        <!-- Camera for AR -->
-        <a-camera position="-1 -1 -1"></a-camera>
-
-        <!-- Head occluder -->
+        <!-- head occluder -->
         <a-entity mindar-face-target="anchorIndex: 168">
           <a-gltf-model
             mindar-face-occluder
             position="0 -0.3 0.15"
             rotation="0 0 0"
-            scale="0 0 0"
+            scale="0.065 0.065 0.065"
             src="#headModel"
           ></a-gltf-model>
         </a-entity>
-
-        <!-- Hat model -->
-        <a-entity mindar-face-target="anchorIndex: 0">
+        <a-entity mindar-face-target="anchorIndex: 10">
           <a-gltf-model
             rotation="10 90 0"
-            position="0 0.5 0"
-            scale="0.005 0.005 0.005"
+            position="0 -0.1 0"
+            scale="0.004 0.004 0.004"
             src="#hatModel"
             class="hat1-entity"
-            visible="true"
+            visible="false"
+          ></a-gltf-model>
+        </a-entity>
+        <a-entity mindar-face-target="anchorIndex: 10">
+          <a-gltf-model
+            rotation="10 90 10"
+            position="0 0.1 0"
+            scale="0.4 0.4 0.4"
+            src="#hatModel2"
+            class="hat2-entity"
+            visible="false"
           ></a-gltf-model>
         </a-entity>
       </a-scene>
